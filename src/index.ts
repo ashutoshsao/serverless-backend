@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { PrismaClient } from '@prisma/client/edge'
+import { PrismaClient } from './generated/prisma/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 type Bindings = {
@@ -14,10 +14,10 @@ app.post('/', async (c) => {
     email: string;
     password: string
   } = await c.req.json()
-
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate())
+
 
   await prisma.user.create({
     data: {
@@ -27,7 +27,7 @@ app.post('/', async (c) => {
     }
   })
 
-  return c.json({ msg: "as" })
+  return c.json({ msg: "insertion done!" })
 })
 
 export default app
